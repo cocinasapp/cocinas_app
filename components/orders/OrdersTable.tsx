@@ -119,7 +119,7 @@ function buildGroupColorMap(comandas: Comanda[]): Map<string, GroupColor2> {
   const colorMap = new Map<string, GroupColor2>();
   let colorIdx = 0;
   for (const [grupo, count] of Array.from(groupCounts.entries())) {
-    if (count > 1) {
+    if (count >= 1) {
       colorMap.set(grupo, GROUP_COLORS[colorIdx % GROUP_COLORS.length]);
       colorIdx++;
     }
