@@ -12,8 +12,14 @@ html {
 body {
   margin: 0;
   background: linear-gradient(180deg, #fffdfa 0%, #fff5e6 100%);
-  min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Prevent Radix UI scroll-lock from adding padding in PWA (no scrollbar) */
+body[data-scroll-locked] {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
 }
 
 /* ─── Radix UI orange accent overrides ────────────────────────────────────── */
