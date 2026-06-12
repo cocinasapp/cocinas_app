@@ -21,6 +21,7 @@ import {
   fetchTiempos,
   createManualOrder,
   editGroupOrder,
+  fetchOrderDetail,
 } from "@/lib/api-client";
 import type { Comanda, ComidaItem, PlatilloSeleccionado, Platillo } from "@/lib/types";
 
@@ -68,12 +69,23 @@ export function ManualOrderModal({
   }, [open]);
 
   useEffect(() => {
-    if (editComanda) {
+    if (editComanda && open) {
       setClienteNombre(editComanda.cliente_nombre);
       setTipoEntrega(editComanda.tipo_entrega);
       setDireccion(editComanda.direccion ?? "");
+      fetchOrderDetail(editComanda.id).then((items) => {
+        setComidas([{
+          platillos: items.map((item) => ({
+            platillo_id: item.platillo_id,
+            platillo_nombre: item.platillo ?? "",
+            precio: item.precio ?? 0,
+          })),
+        }]);
+      }).catch(() => {
+        setComidas([{ platillos: [] }]);
+      });
     }
-  }, [editComanda]);
+  }, [editComanda, open]);
 
   const getPlatillosByTiempo = (tiempoId: string): Platillo[] =>
     activePlatillos.filter((p) => p.tiempo_id === tiempoId);
@@ -151,10 +163,10 @@ export function ManualOrderModal({
         await editGroupOrder(
           editComanda.pedido_grupo,
           {
-            comandas: comidas.map((c) => ({
+            comandas: [{
               comanda_id: editComanda.id,
-              platillos: c.platillos,
-            })),
+              platillos: comidas[0]?.platillos ?? [],
+            }],
             precio_menu: config.precio_menu,
             descuento_por_platillo: config.descuento_por_platillo,
           },
@@ -239,9 +251,11 @@ export function ManualOrderModal({
           {/* Comidas */}
           <Flex justify="between" align="center">
             <Text size="3" weight="bold">Comidas</Text>
-            <Button size="2" variant="soft" color="orange" onClick={addComida}>
-              <Plus size={14} /> Agregar Comida
-            </Button>
+            {!isEdit && (
+              <Button size="2" variant="soft" color="orange" onClick={addComida}>
+                <Plus size={14} /> Agregar Comida
+              </Button>
+            )}
           </Flex>
 
           {comidas.map((comida, comidaIdx) => (

@@ -169,3 +169,7 @@ export async function editGroupOrder(
     body: JSON.stringify({ ...payload, backend_url: backendUrl }),
   });
 }
+
+export async function fetchOrderDetail(id: string): Promise<ComandaDesglose[]> {
+  return apiFetch<ComandaDesglose[]>(`/api/orders/${id}/detail`);
+}
