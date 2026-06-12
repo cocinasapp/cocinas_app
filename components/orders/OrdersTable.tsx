@@ -49,7 +49,7 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
       {
         key: "listos",
         label: "Listos",
-        filter: (c) => c.status === "LISTO_COCINA",
+        filter: (c) => c.status === "TERMINADO" || c.status === "LISTO_COCINA",
         nextStatus: "ENVIADO",
         nextLabel: "Marcar Enviado",
       },
@@ -68,7 +68,7 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
     ];
   }
 
-  const baseTabs: TabDef[] = [
+  return [
     {
       key: "pendiente",
       label: "Pendiente",
@@ -86,8 +86,21 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
     {
       key: "terminado",
       label: "Terminado",
-      // TERMINADO tab shows LISTO_COCINA orders (backend auto-promotes)
-      filter: (c) => c.status === "LISTO_COCINA",
+      filter: (c) => c.status === "TERMINADO" || c.status === "LISTO_COCINA",
+      nextStatus: "ENVIADO",
+      nextLabel: "Marcar Enviado",
+    },
+    {
+      key: "enviado",
+      label: "Enviado",
+      filter: (c) => c.status === "ENVIADO",
+      nextStatus: "ENTREGADO",
+      nextLabel: "Marcar Entregado",
+    },
+    {
+      key: "entregado",
+      label: "Entregado",
+      filter: (c) => c.status === "ENTREGADO",
     },
     {
       key: "cancelado",
@@ -95,16 +108,6 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
       filter: (c) => c.status === "CANCELADO",
     },
   ];
-
-  if (role === "admin") {
-    baseTabs.splice(3, 0, {
-      key: "listo_entrega",
-      label: "Listo Entrega",
-      filter: (c) => c.status === "ENVIADO" || c.status === "ENTREGADO",
-    });
-  }
-
-  return baseTabs;
 }
 
 // Build group color map: groups with >1 comanda get a color
