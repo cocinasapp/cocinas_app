@@ -1,0 +1,12 @@
+{
+  "/api/orders/route": "app/api/orders/route.js",
+  "/api/auth/profile/route": "app/api/auth/profile/route.js",
+  "/api/config/route": "app/api/config/route.js",
+  "/api/tiempos/route": "app/api/tiempos/route.js",
+  "/api/platillos/route": "app/api/platillos/route.js",
+  "/api/ordenes/manual/route": "app/api/ordenes/manual/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/login/page": "app/login/page.js"
+}
