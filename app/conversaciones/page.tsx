@@ -30,9 +30,9 @@ export default function ConversacionesPage() {
   }
 
   return (
-    <Box style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <Flex direction="column" style={{ height: "100dvh", overflow: "hidden" }}>
       <Navbar showConversaciones />
-      <Flex align="center" px="4" pt="4">
+      <Flex align="center" px="4" py="2" style={{ flexShrink: 0 }}>
         <Button
           variant="ghost"
           color="gray"
@@ -45,6 +45,6 @@ export default function ConversacionesPage() {
         </Button>
       </Flex>
       <ConversationsView />
-    </Box>
+    </Flex>
   );
 }
