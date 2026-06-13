@@ -124,6 +124,13 @@ export async function togglePlatillo(id: string, activo: boolean): Promise<Plati
   });
 }
 
+export async function updatePlatilloStock(id: string, stock: number | null): Promise<Platillo> {
+  return apiFetch<Platillo>(`/api/platillos/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ stock }),
+  });
+}
+
 // ─── Users ────────────────────────────────────────────────────────────────────
 
 export async function fetchUsuarios(): Promise<UserProfile[]> {

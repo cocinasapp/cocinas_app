@@ -25,6 +25,7 @@ import {
   fetchPlatillos,
   createPlatillo,
   togglePlatillo,
+  updatePlatilloStock,
 } from "@/lib/api-client";
 import type { CocinaConfig, Tiempo, Platillo } from "@/lib/types";
 
@@ -289,6 +290,16 @@ function PlatillosTab() {
   const [newTiempoId, setNewTiempoId] = useState<string>("");
   const [adding, setAdding] = useState(false);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [stockEdits, setStockEdits] = useState<Record<string, string>>({});
+  const [savingStockId, setSavingStockId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initial: Record<string, string> = {};
+    for (const p of platillos) {
+      initial[p.id] = p.stock != null ? String(p.stock) : "";
+    }
+    setStockEdits(initial);
+  }, [platillos]);
 
   useEffect(() => {
     if (activeTiempos.length > 0 && !newTiempoId) {
@@ -321,6 +332,22 @@ function PlatillosTab() {
       alert("Error al actualizar platillo");
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  const handleStockBlur = async (p: Platillo) => {
+    const raw = stockEdits[p.id] ?? "";
+    const parsed = raw === "" ? null : parseInt(raw, 10);
+    const current = p.stock ?? null;
+    if (parsed === current) return;
+    setSavingStockId(p.id);
+    try {
+      await updatePlatilloStock(p.id, parsed);
+      queryClient.invalidateQueries({ queryKey: ["platillos"] });
+    } catch {
+      alert("Error al actualizar stock");
+    } finally {
+      setSavingStockId(null);
     }
   };
 
@@ -374,6 +401,7 @@ function PlatillosTab() {
               <Table.ColumnHeaderCell>Platillo</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Precio</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Tiempo</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Stock</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Activo</Table.ColumnHeaderCell>
             </Table.Row>
           </Table.Header>
@@ -386,6 +414,23 @@ function PlatillosTab() {
                   <Badge color="orange" variant="soft" size="1">
                     {getTiempoNombre(p.tiempo_id)}
                   </Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  {savingStockId === p.id ? (
+                    <Spinner size="1" />
+                  ) : (
+                    <TextField.Root
+                      type="number"
+                      min="0"
+                      placeholder="∞"
+                      value={stockEdits[p.id] ?? ""}
+                      onChange={(e) =>
+                        setStockEdits((prev) => ({ ...prev, [p.id]: e.target.value }))
+                      }
+                      onBlur={() => handleStockBlur(p)}
+                      style={{ width: 70 }}
+                    />
+                  )}
                 </Table.Cell>
                 <Table.Cell>
                   {togglingId === p.id ? (

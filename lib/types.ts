@@ -83,6 +83,7 @@ export interface Platillo {
   tiempo_id: string;
   activo: boolean;
   created_at: string;
+  stock?: number | null;
 }
 
 // ─── Conversations ────────────────────────────────────────────────────────────
