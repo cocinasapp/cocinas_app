@@ -30,23 +30,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: fetchError?.message ?? "Error fetching group" }, { status: 500 });
   }
 
-  // Check if all are TERMINADO
-  const allTerminado = groupOrders.every((o) => o.status === "TERMINADO");
+  // TERMINADO = done and visible; LISTO_COCINA = done but hidden (waiting for group)
+  const DONE = ["TERMINADO", "LISTO_COCINA"];
+  const allDone = groupOrders.every((o) => DONE.includes(o.status));
 
-  if (!allTerminado) {
-    return NextResponse.json({ updated: false });
+  if (allDone) {
+    // All done → promote every comanda to visible TERMINADO
+    const ids = groupOrders.map((o) => o.id);
+    const { error } = await supabaseData
+      .from("tbl_cocina_comandas")
+      .update({ status: "TERMINADO" })
+      .in("id", ids);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ updated: true, all_complete: true });
   }
 
-  // Promote all to LISTO_COCINA
-  const ids = groupOrders.map((o) => o.id);
-  const { error: updateError } = await supabaseData
-    .from("tbl_cocina_comandas")
-    .update({ status: "LISTO_COCINA" })
-    .in("id", ids);
-
-  if (updateError) {
-    return NextResponse.json({ error: updateError.message }, { status: 500 });
+  // Group incomplete → hide this comanda until the rest finish
+  const { comanda_id } = body;
+  if (comanda_id) {
+    await supabaseData
+      .from("tbl_cocina_comandas")
+      .update({ status: "LISTO_COCINA" })
+      .eq("id", comanda_id);
   }
 
-  return NextResponse.json({ updated: true, count: ids.length });
+  return NextResponse.json({ updated: true, all_complete: false });
 }

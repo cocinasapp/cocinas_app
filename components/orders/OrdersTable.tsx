@@ -50,7 +50,7 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
       {
         key: "listos",
         label: "Listos",
-        filter: (c) => c.status === "LISTO_COCINA",
+        filter: (c) => c.status === "TERMINADO",
         nextStatus: "ENVIADO",
         nextLabel: "Marcar Enviado",
       },
@@ -87,10 +87,9 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
     {
       key: "terminado",
       label: "Terminado",
-      filter: (c) => c.status === "TERMINADO" || c.status === "LISTO_COCINA",
+      filter: (c) => c.status === "TERMINADO",
       nextStatus: "ENVIADO",
       nextLabel: "Marcar Enviado",
-      actionOnlyForStatus: "LISTO_COCINA",
     },
     {
       key: "enviado",
@@ -393,8 +392,7 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
                               </Button>
                             )}
 
-                            {tab.nextStatus &&
-                              (!tab.actionOnlyForStatus || comanda.status === tab.actionOnlyForStatus) && (
+                            {tab.nextStatus && (
                               <Button
                                 size="1"
                                 variant="soft"
