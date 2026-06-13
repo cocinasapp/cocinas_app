@@ -8,14 +8,13 @@ export async function GET(req: NextRequest) {
 
   const { adminUserId } = auth.user;
 
-  // Today's date range in UTC
-  const now = new Date();
-  const startOfDay = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0)
-  );
-  const endOfDay = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999)
-  );
+  // Today's date range in Mexico City time (UTC-6)
+  // midnight CDMX = 06:00 UTC, next midnight CDMX = next day 06:00 UTC
+  const CDMX_OFFSET_MS = 6 * 60 * 60 * 1000;
+  const nowCdmx = new Date(Date.now() - CDMX_OFFSET_MS);
+  const y = nowCdmx.getUTCFullYear(), m = nowCdmx.getUTCMonth(), d = nowCdmx.getUTCDate();
+  const startOfDay = new Date(Date.UTC(y, m, d, 6, 0, 0, 0));
+  const endOfDay = new Date(Date.UTC(y, m, d + 1, 6, 0, 0, 0) - 1);
 
   const { data, error } = await supabaseData
     .from("tbl_cocina_comandas")
