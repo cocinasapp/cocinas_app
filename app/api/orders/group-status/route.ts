@@ -30,10 +30,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: fetchError?.message ?? "Error fetching group" }, { status: 500 });
   }
 
-  if (groupOrders.length <= 1) {
-    return NextResponse.json({ updated: false });
-  }
-
   // Check if all are TERMINADO
   const allTerminado = groupOrders.every((o) => o.status === "TERMINADO");
 

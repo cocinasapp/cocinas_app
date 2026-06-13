@@ -41,6 +41,7 @@ type TabDef = {
   filter: (c: Comanda) => boolean;
   nextStatus?: OrderStatus;
   nextLabel?: string;
+  actionOnlyForStatus?: OrderStatus;
 };
 
 function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
@@ -49,7 +50,7 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
       {
         key: "listos",
         label: "Listos",
-        filter: (c) => c.status === "TERMINADO" || c.status === "LISTO_COCINA",
+        filter: (c) => c.status === "LISTO_COCINA",
         nextStatus: "ENVIADO",
         nextLabel: "Marcar Enviado",
       },
@@ -89,6 +90,7 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
       filter: (c) => c.status === "TERMINADO" || c.status === "LISTO_COCINA",
       nextStatus: "ENVIADO",
       nextLabel: "Marcar Enviado",
+      actionOnlyForStatus: "LISTO_COCINA",
     },
     {
       key: "enviado",
@@ -391,7 +393,8 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
                               </Button>
                             )}
 
-                            {tab.nextStatus && (
+                            {tab.nextStatus &&
+                              (!tab.actionOnlyForStatus || comanda.status === tab.actionOnlyForStatus) && (
                               <Button
                                 size="1"
                                 variant="soft"
