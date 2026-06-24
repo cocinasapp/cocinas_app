@@ -100,12 +100,13 @@ export interface Message {
   user_id: string;
 }
 
-export interface Contact {
+export type Contact = {
   phone_number: string;
+  telefono_real: string | null;
   last_message: string;
   last_message_at: string;
   message_count: number;
-}
+};
 
 // ─── Manual Order ─────────────────────────────────────────────────────────────
 

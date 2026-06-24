@@ -155,7 +155,7 @@ export function ConversationsView() {
                   </Flex>
                   <Flex direction="column" style={{ minWidth: 0 }}>
                     <Text size="2" weight="medium" style={{ fontFamily: "monospace" }}>
-                      {contact.phone_number}
+                      {contact.telefono_real || contact.phone_number}
                     </Text>
                     <Text
                       size="1"

@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabaseData
     .from("conversations")
-    .select("phone_number, message, created_at")
+    .select("phone_number, telefono_real, message, created_at")
     .eq("user_id", adminUserId)
     .gte("created_at", start.toISOString())
     .lte("created_at", end.toISOString())
@@ -58,13 +58,14 @@ export async function GET(req: NextRequest) {
   // Group by phone_number
   const contactMap = new Map<
     string,
-    { last_message: string; last_message_at: string; message_count: number }
+    { telefono_real: string | null; last_message: string; last_message_at: string; message_count: number }
   >();
 
   for (const row of data ?? []) {
     const existing = contactMap.get(row.phone_number);
     if (!existing) {
       contactMap.set(row.phone_number, {
+        telefono_real: row.telefono_real,
         last_message: row.message,
         last_message_at: row.created_at,
         message_count: 1,
