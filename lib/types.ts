@@ -51,6 +51,9 @@ export interface ComandaDesglose {
   platillo_id: string;
   platillo?: string;
   precio?: number;
+  tiempo_id?: number | null;
+  tiempo_nombre?: string | null;
+  tiempo_orden?: number | null;
 }
 
 // ─── Kitchen Config ───────────────────────────────────────────────────────────

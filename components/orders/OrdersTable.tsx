@@ -21,6 +21,7 @@ import {
 } from "@/lib/api-client";
 import { StatusBadge } from "./StatusBadge";
 import { OrderDetailModal } from "./OrderDetailModal";
+import { LocalTablesModal } from "./LocalTablesModal";
 import { GROUP_COLORS } from "@/lib/constants";
 import type { GroupColor } from "@/lib/constants";
 import type { Comanda, OrderStatus } from "@/lib/types";
@@ -165,6 +166,7 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
   const [page, setPage] = useState(1);
   const [selectedComanda, setSelectedComanda] = useState<Comanda | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [localModalOpen, setLocalModalOpen] = useState(false);
   const [updatingIds, setUpdatingIds] = useState<Set<string>>(new Set());
 
   const tabs = useMemo(() => getTabsForRole(role), [role]);
@@ -202,6 +204,14 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
     }
     return m;
   }, [allOrders, tabs]);
+
+  const localesEnProceso = useMemo(
+    () =>
+      allOrders.filter(
+        (c) => c.status === "EN_PROCESO" && c.tipo_entrega === "local"
+      ),
+    [allOrders]
+  );
 
   const handleStatusUpdate = useCallback(
     async (comanda: Comanda, newStatus: OrderStatus) => {
@@ -265,6 +275,20 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
           </Tabs.List>
 
           <Flex gap="2" align="center">
+            {(role === "cocina" || role === "mesero" || role === "admin") &&
+              activeTab === "en_proceso" &&
+              localesEnProceso.length > 0 && (
+                <Button
+                  variant="soft"
+                  color="teal"
+                  size="2"
+                  onClick={() => setLocalModalOpen(true)}
+                  style={{ cursor: "pointer" }}
+                >
+                  Local
+                </Button>
+              )}
+
             <TextField.Root
               placeholder="Buscar cliente..."
               value={search}
@@ -494,6 +518,12 @@ export function OrdersTable({ role, onEditOrder }: OrdersTableProps) {
         comanda={selectedComanda}
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
+      />
+
+      <LocalTablesModal
+        open={localModalOpen}
+        onClose={() => setLocalModalOpen(false)}
+        comandas={localesEnProceso}
       />
     </Box>
   );

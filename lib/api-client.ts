@@ -59,6 +59,13 @@ export async function fetchOrderDetail(id: string): Promise<ComandaDesglose[]> {
   return apiFetch<ComandaDesglose[]>(`/api/orders/${id}/detail`);
 }
 
+export async function fetchOrderDetailsBatch(
+  comandaIds: string[]
+): Promise<ComandaDesglose[]> {
+  const results = await Promise.all(comandaIds.map((id) => fetchOrderDetail(id)));
+  return results.flat();
+}
+
 export async function checkAndUpdateGroupStatus(
   pedido_grupo: string,
   comanda_id: string
