@@ -69,6 +69,30 @@ function getTabsForRole(role: OrdersTableProps["role"]): TabDef[] {
     ];
   }
 
+  if (role === "cocina" || role === "mesero") {
+    return [
+      {
+        key: "pendiente",
+        label: "Pendiente",
+        filter: (c) => c.status === "PENDIENTE",
+        nextStatus: "EN_PROCESO",
+        nextLabel: "Iniciar",
+      },
+      {
+        key: "en_proceso",
+        label: "En Proceso",
+        filter: (c) => c.status === "EN_PROCESO",
+        nextStatus: "TERMINADO",
+        nextLabel: "Terminar",
+      },
+      {
+        key: "cancelado",
+        label: "Cancelado",
+        filter: (c) => c.status === "CANCELADO",
+      },
+    ];
+  }
+
   return [
     {
       key: "pendiente",
