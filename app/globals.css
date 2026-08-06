@@ -95,3 +95,24 @@ body[data-scroll-locked] {
   box-shadow: 0 4px 24px rgba(255, 122, 0, 0.12);
   border: 1px solid #ffe0b2;
 }
+
+/* Navbar: la fila de acciones (derecha) hace scroll propio en vez de estirar la página */
+.navbar-actions {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+}
+
+.navbar-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.navbar-actions > * {
+  flex-shrink: 0;
+}
+
+/* Red de seguridad: nunca permitir scroll horizontal a nivel de página */
+html, body {
+  overflow-x: hidden;
+}

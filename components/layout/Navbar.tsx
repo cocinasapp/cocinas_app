@@ -58,18 +58,18 @@ export function Navbar({
         top: 0,
         zIndex: 100,
         boxShadow: "0 2px 8px rgba(255,122,0,0.08)",
+        maxWidth: "100vw",
       }}
     >
       {/* Left: Logo + Brand */}
-      <Flex align="center" gap="2">
+      <Flex align="center" gap="2" style={{ flexShrink: 0 }}>
         <ChefHat size={28} color={BRAND_ORANGE} />
         <Text weight="bold" size="4" style={{ color: BRAND_ORANGE }}>
           {businessName}
         </Text>
       </Flex>
-
       {/* Right: actions + user info */}
-      <Flex align="center" gap="3">
+      <Flex align="center" gap="3" className="navbar-actions">
         {role === "admin" && onManualOrder && (
           <Button
             variant="soft"
