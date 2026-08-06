@@ -96,20 +96,33 @@ body[data-scroll-locked] {
   border: 1px solid #ffe0b2;
 }
 
-/* Navbar: la fila de acciones (derecha) hace scroll propio en vez de estirar la página */
-.navbar-actions {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  min-width: 0;
+/* Navbar responsive: en pantallas chicas los botones secundarios se colapsan en un menú */
+.navbar-brand-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.navbar-actions::-webkit-scrollbar {
+.navbar-actions-desktop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-menu-trigger {
   display: none;
 }
 
-.navbar-actions > * {
-  flex-shrink: 0;
+@media (max-width: 768px) {
+  .navbar-brand-text {
+    max-width: 140px;
+  }
+  .navbar-actions-desktop {
+    display: none;
+  }
+  .navbar-menu-trigger {
+    display: flex !important;
+  }
 }
 
 /* Red de seguridad: nunca permitir scroll horizontal a nivel de página */
